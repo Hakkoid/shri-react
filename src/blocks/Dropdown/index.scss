@@ -1,0 +1,70 @@
+@import '../../constants';
+
+.Dropdown{
+    height: 100%;
+
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+
+    &-Toggler{
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        font-family: inherit;
+
+        color: $mainTextColor;
+        background: transparent;
+        border: none;
+    }
+
+    &-Title{
+        margin-right: 3px;
+        right: -17px;
+
+        font-weight: 700;
+    }
+
+    &-Arrow{
+        width: 27px;
+        height: 6px;
+        right: -17px;
+
+        position: absolute;
+
+        svg{
+            height: 6px;
+            width: 10px;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+
+            fill: $mainTextColor;
+
+            display: block;
+            position: absolute;
+        }
+    }
+
+    &:hover &-List{
+        display: block;
+    }
+
+    &-List{
+        width: 100%;
+        position: absolute;
+        top: 100%;
+        display: none;
+    }
+
+    &_color_secondary{
+        .Dropdown-Toggler{
+            color: $secondaryTextColor;
+        }
+
+        .Dropdown-Arrow svg{
+            fill: $secondaryTextColor;
+        }
+    }
+}

@@ -1,0 +1,52 @@
+@import './../../constants';
+
+.List{
+    margin: 0;
+    padding: 0;
+
+    list-style-type: none;
+
+    &-Item{
+        padding: 14px 8px 14px;
+
+        position: relative;
+
+        border-bottom: 1px solid $secondaryBorderColor;
+
+        &_view_header{
+            padding: 14px 8px 10px;
+            border-bottom: 1px solid $mainBorderColor;
+        }
+
+        &:last-child{
+            border-bottom: none;
+        }
+    }
+
+    &-Arrow{
+        height: 21px;
+        width: 10px;
+        top: 50%;
+        right: 3px;
+        transform: translateY(-50%) translateY(1px);
+
+        position: absolute;
+
+        fill: $mainBorderColor;
+
+        & > svg{
+            height: 100%;
+            width: 100%;
+        }
+    }
+
+    @media screen and (min-width: $screen-m){
+        &-Item{    
+
+        }
+
+        &-Arrow{
+            display: none;
+        }
+    }
+}

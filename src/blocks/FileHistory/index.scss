@@ -1,0 +1,115 @@
+@import './../../constants';
+
+.FileHistory{
+    margin-top: 18px;
+
+    &-List{
+        list-style-type: none;
+        padding-left: 52px;
+    }
+
+    &-Header{
+        font-size: 14px;
+        line-height: 18px;
+    }
+
+    &-Title{
+        margin-bottom: 0px;
+        margin-top: 0px;
+
+        display: inline-block;
+        flex: 7;
+
+        font-size: inherit;
+        line-height: inherit;
+    }
+
+    &-Details, &-Additional{
+        font-size: 13px;
+        line-height: 18px;
+    }
+
+    &-Details{
+        margin-top: 0;
+        margin-bottom: 3px;
+    }
+
+    &-Additional, &-Hash{
+        margin-right: 3px;
+    }
+
+    &-Additional{
+        color: #434445;
+    }
+
+    &-Header > &-Hash{
+        display: none;
+        flex: 1;
+    }
+
+    &-Entry{
+        margin-bottom: 17px;
+
+        position: relative;
+
+        &::before{
+            height: calc(100% - 27px);
+            width: 2px;
+            top: 42px;
+            left: -33px;
+
+            content: '';
+            position: absolute;
+
+            border-radius: 2px;
+            background: #B8BEC3;
+        }
+
+        &:last-child::before{
+            display: none;
+        }
+    }
+
+    &-Icon{
+        top: 0;
+        left: -52px;
+        height: 40px;
+        width: 40px;
+
+        display: block;
+        position: absolute;
+
+        border-radius: 50%;
+        background: #EBF6FD;
+
+        &>svg{
+            top: 50%;
+            left: 50%;
+            transform: translateY(-50%) translateX(-50%);
+
+            position: absolute;
+        }
+    }
+
+    &-TagIcon{
+        flex: 1;
+
+        text-align: right;
+        float: right;
+    }
+
+    @media screen and (min-width: $screen-m){
+        &_first{
+            margin-top: 25px;
+        }
+
+        &-Header{
+            display: flex;
+            justify-content: space-between;
+        }
+
+        &-Header > &-Hash{
+            display: inline;
+        }
+    }
+}

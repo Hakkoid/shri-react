@@ -1,0 +1,9 @@
+@import './../../constants';
+
+.Layout-Section{
+    padding: 0 16px;
+
+    @media screen and (min-width: $screen-m){
+        padding: 0 32px;
+    }
+}

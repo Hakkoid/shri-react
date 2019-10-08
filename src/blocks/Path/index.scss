@@ -1,0 +1,34 @@
+@import './../../constants';
+
+.Path{
+    font-size: 14px;
+    line-height: 20px;
+    padding: 5px 0 14px;
+
+    &_size_m{
+        padding: 5px 0 10px;
+    }
+
+    &-Dir, &-File{
+        display: inline-block;
+        margin-top: 4px;
+    }
+
+    &-Dir{
+        margin-right: 10px;
+        
+        &::after{
+            content: '/';
+            display: inline-block;
+            margin-left: 18px;
+        }
+    }
+
+    @media screen and (min-width: $screen-m) {
+        padding: 5px 0 13px;
+        
+        &-Dir, &-File{
+            margin-top: 0;
+        }
+    }
+}

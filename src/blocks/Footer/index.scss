@@ -1,0 +1,16 @@
+.Footer{
+    height: 60px;
+    padding: 0 20px;
+
+    line-height: 50px;
+
+    border-top: 1px solid #E5E5E5; 
+
+    &-Right{
+        float: right;
+    }
+
+    &-Link{
+        margin-left: 28px;
+    }
+}

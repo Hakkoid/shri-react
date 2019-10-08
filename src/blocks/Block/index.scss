@@ -1,0 +1,21 @@
+@import './../../constants';
+
+.Block{
+    &_only{
+        &_desktop{
+            @media screen and (max-width: $screen-m - 1px){
+                display: none!important;
+                // не уверен, что important хорошее решение, но не нашел
+                // другого способа сделать универсально скрывать элементы
+                // на мобильной версии, так как другие блоки могут перекрывать
+                // наш селектор
+            }
+        }
+
+        &_mobile{
+            @media screen and (min-width: $screen-m){
+                display: none!important;
+            }
+        }
+    }
+}

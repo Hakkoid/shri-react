@@ -1,0 +1,35 @@
+.Highlighter{
+    &_py &-El_color{
+        &_comment{
+            color: #8694A2
+        }
+
+        &_default{
+            color: #01234b;
+        }
+
+        &_second{
+            color: #005fba;
+        }
+    }
+
+    &_js{
+        &-El_color{
+            &_comment{
+                color: #8694A2
+            }
+    
+            &_default{
+                color: #01234b;
+            }
+    
+            &_second{
+                color: #005fba;
+            }
+
+            &_system{
+                color: #0433ff;
+            }
+        }
+    }
+}

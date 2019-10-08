@@ -1,0 +1,110 @@
+@import './../../constants';
+
+.Code{
+    margin-top: 16px;
+    width: 100vw;
+    left: 50%;
+    transform: translateX(-50%);
+
+    position: relative;
+    box-sizing: border-box;
+
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border: 1px solid $mainBorderColor; 
+
+    &-Header{
+        padding: 10px 15px;
+        margin-bottom: 4px;
+
+        position: relative;
+
+        border-bottom: 1px solid $mainBorderColor; 
+        background: $mainBackColor;
+    }
+
+    &-Size{
+        color: #999999;
+    }
+
+    &-Blob{
+        width: 100%;
+
+        box-sizing: border-box;
+        table-layout: fixed;
+
+        border-collapse: separate;
+    }
+
+    &-Line{
+        padding: 0;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    &-LineNumber{
+        padding: 0 10px 0 0;
+        width: 29px;
+        color: #999999;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        user-select: none;    
+
+        vertical-align: top;
+        text-align: right;
+    }
+
+    &-Line, &-LineNumber{
+        font-size: 12px;
+        line-height: 18px;
+        font-family: PT Mono;
+
+        border-spacing: 0;
+    }
+
+    &-Download{
+        padding: 3px 11.5px;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%) translateY(1px);
+
+        position: absolute;
+        display: none;
+
+        border-radius: 3px;
+        border: 1px solid #CCCCCC;
+
+        &>svg{
+            vertical-align: middle;
+        }
+    }
+
+    &-IconType{
+        margin-right: 6px;
+
+        vertical-align: middle;
+    }
+
+    @media screen and (min-width: $screen-m){
+        width: 100%;
+        left: 0;
+        transform: none;
+
+        &-Header{
+            margin-bottom: 2px;
+        }
+
+        &-Download{
+            display: block;
+        }
+
+        &-LineNumber{
+            padding: 0 30px 0 0;
+            width: 36px;
+        }
+
+        &-IconType{
+            margin-right: 8px;
+        }    
+    }
+}

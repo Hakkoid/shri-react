@@ -1,0 +1,114 @@
+@import '../../constants';
+
+.Text{
+    letter-spacing:  -0.026ex;
+
+    &_size{
+        &_m{
+            font-size: 14px;
+            line-height: 20px;
+        }
+
+        &_l{
+            font-size: 16px;
+            line-height: 20px; 
+        }
+
+        &_xl{
+            font-size: 20px;
+            line-height: 28px; 
+        }
+
+        &_xxl{
+            font-size: 24px;
+            line-height: 28px; 
+        }
+    }
+
+    &_type{
+        &_h1{
+            margin-top: 9px;
+            margin-bottom: 10px;
+
+            @media screen and (min-width: $screen-m){
+                margin-bottom: 12px;
+            }
+        }
+
+        &_h2{
+            margin-top: 9px;
+            margin-bottom: 3px;
+        }
+
+        &_p{
+            margin-top: 3px;
+            margin-bottom: 4px;
+        }
+    }
+
+    &_color{
+        &_main{
+            color: $mainTextColor;
+        }
+
+        &_secondary{
+            color: $secondaryTextColor;
+        }
+
+        &_active{
+            color: $activeColor;
+        }
+
+        &_link{
+            color: $linkTextColor;
+        }
+    }
+
+    &_view_link{
+        text-decoration: none;
+
+        &:visited{
+            color: none;
+        }
+    }
+
+    &_weight{
+        &_medium{
+            font-weight: 400;
+        }
+
+        &_bold{
+            font-weight: 700;
+        }
+    }
+
+    &_spacing{
+        &_xs{
+            letter-spacing: -0.09ex;
+        }
+
+        &_s{
+            letter-spacing: -0.067ex;
+        }
+
+        &_l{
+            letter-spacing: 0;
+        }
+
+        &_xl{
+            letter-spacing: 0.026ex;
+        }
+    }
+
+    &_word{
+        display: inline-block;
+    }
+
+    &_align_right{
+        text-align: right;
+    }
+
+    &_firstLetter_active::first-letter{
+        color: $activeColor;
+    }
+}

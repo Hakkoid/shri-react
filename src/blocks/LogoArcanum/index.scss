@@ -1,0 +1,10 @@
+@import './../../constants';
+
+.LogoArcanum{
+    padding-top: 1px;
+
+    @media screen and (min-width: $screen-m){
+        padding-top: 0px;
+        padding-bottom: 1px;
+    }
+}

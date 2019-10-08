@@ -1,0 +1,37 @@
+@import './../../constants';
+
+.Line{
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    justify-content: space-between;
+
+    list-style-type: none;
+
+    &-Field{
+        &:last-child{
+            text-align: right;
+        }
+
+        &_grow{
+            &_default{
+                flex: 2;
+            }
+
+            &_medium{
+                flex: 3;
+            }
+
+            &_long{
+                flex: 6;
+            }
+        }
+    }
+
+    &-Icon{
+        margin-right: 4px;
+
+        vertical-align: middle;
+    }
+}
