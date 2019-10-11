@@ -2,7 +2,9 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux'
 
 import Line from './../Line'
+import { bemCls as bemLine } from './../Line'
 import List from './../List'
+import FileIcon from './../FileIcon'
 import StyledLink from './../StyledLink'
 import { bemCls as bemText } from './../Text'
 import { fetchFiles } from './../../actions/files'
@@ -23,7 +25,7 @@ const FileList = ({ files = [], params, onInit }) => {
         path
     ])
 
-    const lines = makeLines(files, repositoryId, commitHash)
+    const lines = makeLines({ files, repos: repositoryId, currentHash: commitHash, path })
 
 
     return (
@@ -42,27 +44,35 @@ const FileList = ({ files = [], params, onInit }) => {
     )
 }
 
-function makeLines(files, repos, currentHash) {
-    let path = './'
+function makeLines({ files, repos, currentHash, path }) {
 
-    if(!currentHash){
-        path += 'master'
-    }
+    const sortedFiles = files.sort(file => {
+        if(file.type === 'blob') return 1
+        if(file.type === 'tree') return -1
 
-    return files.map(file => {
+        return 0
+    })
+
+    return sortedFiles.map(file => {
         const {
             fileName,
             commitHash,
             message,
             committer,
-            updated
+            updated,
+            type
         } = file
 
         return (
             <List.Item key={fileName}>
                 <Line>
-                    <Line.Field mods={{ grow: 'medium' }}>
-                        <StyledLink color='main' className={bemText({ weight: 'bold' })} to={`${path}/${fileName}`}>
+                    <Line.Field mods={{ grow: 'medium', withIcon: true }}>
+                        <StyledLink
+                            color='main'
+                            className={bemText({ weight: 'bold' })}
+                            to={makePath({ fileName, repos, type, currentHash, path })}
+                        >
+                            <FileIcon {...{fileName, type, className: bemLine('Icon')}} />
                             {fileName}
                         </StyledLink>
                     </Line.Field>
@@ -75,12 +85,31 @@ function makeLines(files, repos, currentHash) {
                     <Line.Field className={bemText({ firstLetter: 'active' })} mods={{ grow: 'default' }}>
                         {committer}
                     </Line.Field>
-                    <Line.Field mods={{ grow: 'default' }}>{updated}</Line.Field>
+                    <Line.Field mods={{ grow: 'default' }}>{renderDate(updated)}</Line.Field>
                 </Line>
             </List.Item>
         )
     })
 
+}
+
+function makePath({ fileName, repos, type, currentHash, path }) {
+    const main = `/repos/${repos}/`
+
+    const typeFile = type ? renderSlash(type) : 'tree/'
+    const hash = currentHash ? renderSlash(currentHash) : 'master/'
+    const pathToDir = path ? renderSlash(path) : ''
+
+    return `${main}${typeFile}${hash}${pathToDir}${fileName}`
+}
+
+function renderSlash(str){
+    return str.replace(/(^\/)|(\/$)/g, '') + '/'
+}
+
+function renderDate(str) {
+    const date = new Date(str)
+    return `${date.getDay()} ${date.getMonth()} ${date.getFullYear()}`
 }
 
 const mapStateToProps = ({ files }) => { return { files } }

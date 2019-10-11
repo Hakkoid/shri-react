@@ -1,35 +1,35 @@
-import { take, put, call, fork } from 'redux-saga/effects'
-import { FETCH_REPOSITORIES, FETCH_FILES } from './../constants/ActionTypes'
+import { take, takeLeading, put, call, fork } from 'redux-saga/effects'
+import { FETCH_REPOSITORIES, FETCH_FILES, FETCH_FILE_BLOB } from './../constants/ActionTypes'
 import { resetRepositories } from './../actions/repositories'
-import { resetFiles } from './../actions/files'
+import { resetFiles, addFiles } from './../actions/files'
+import { setFileBlob } from './../actions/file'
 
-const fetchReps = () => {
-    return fetch('/api/repos')
-        .then(e => e.json())
+function* fetchReps() {
+    const repositories = yield call(() => {
+        return fetch('/api/repos')
+            .then(e => e.json())
+    })
+    yield put(resetRepositories(repositories))
 }
 
 export function* fetchRepositories() {
-    while (true) {
-        yield take(FETCH_REPOSITORIES)
-        const repositories = yield call(fetchReps)
-        yield put(resetRepositories(repositories))
-    }
+    yield takeLeading(FETCH_REPOSITORIES, fetchReps)
 }
 
 const fetchFilesApi = (repository, hash, path) => {
     let url = `/api/repos/${repository}/`
 
-    if(hash){
+    if (hash) {
         url += `tree/${hash}/`
-        if(path) url += path
+        if (path) url += path
     }
 
     return fetch(url)
         .then(e => {
-            if(e.status === 200){ 
+            if (e.status === 200) {
                 return e.json()
-            } else{
-                throw(new Error('Data don\'t found'))
+            } else {
+                throw (new Error('Data don\'t found'))
             }
         })
 }
@@ -38,17 +38,48 @@ export function* fetchFiles() {
     while (true) {
         try {
             const { repository, commitHash, path } = yield take(FETCH_FILES)
-            yield put(resetFiles([]))
-            const repositories = yield call(fetchFilesApi, repository, commitHash, path)
-            yield put(resetFiles(repositories))
-        }catch(e){
-            
+            yield put(resetFiles())
+            const files = yield call(fetchFilesApi, repository, commitHash, path)
+            yield put(addFiles(files))
+        } catch (e) {
+
+        }
+    }
+}
+
+const fetchFileBlobApi = (repository, hash, path) => {
+    let url = `/api/repos/${repository}/`
+
+    if (hash) {
+        url += `blob/${hash}/`
+        if (path) url += path
+    }
+
+    return fetch(url)
+        .then(e => {
+            if (e.status === 200) {
+                return e.json()
+            } else {
+                throw (new Error('Data don\'t found'))
+            }
+        })
+}
+
+export function* fetchFileBlob() {
+    while (true) {
+        try {
+            const { repository, commitHash, path } = yield take(FETCH_FILE_BLOB)
+            const file = yield call(fetchFileBlobApi, repository, commitHash, path)
+            yield put(setFileBlob(file))
+        } catch (e) {
+
         }
     }
 }
 
 
-export function* rootSaga(){
+export function* rootSaga() {
     yield fork(fetchRepositories)
     yield fork(fetchFiles)
+    yield fork(fetchFileBlob)
 }

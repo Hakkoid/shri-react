@@ -1,37 +1,55 @@
-@import './../../constants';
+@import "./../../constants";
 
-.Line{
-    margin: 0;
-    padding: 0;
+.Line {
+	margin: 0;
+	padding: 0;
 
-    display: flex;
-    justify-content: space-between;
+	display: flex;
+	justify-content: space-between;
 
-    list-style-type: none;
+	list-style-type: none;
 
-    &-Field{
-        &:last-child{
-            text-align: right;
-        }
+	&-Field {
+        margin-right: 10px;
+        
+        position: relative;
+		overflow: hidden;
 
-        &_grow{
-            &_default{
-                flex: 2;
-            }
+		&:last-child {
+			text-align: right;
+		}
 
-            &_medium{
-                flex: 3;
-            }
+		&_withIcon {
+			.Line-Text {
+                margin-left: 14px;
+                
+                display: inline-block;
+			}
+		}
 
-            &_long{
-                flex: 6;
-            }
-        }
-    }
+		&_grow {
+			&_default {
+				flex: 2;
+			}
 
-    &-Icon{
-        margin-right: 4px;
+			&_medium {
+				flex: 3;
+			}
 
-        vertical-align: middle;
-    }
+			&_long {
+				flex: 6;
+			}
+		}
+	}
+
+	&-Text {
+		white-space: nowrap;
+	}
+
+	&-Icon {
+		left: 0;
+		top: 5px;
+
+		position: absolute;
+	}
 }

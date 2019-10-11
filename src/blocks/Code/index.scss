@@ -13,9 +13,12 @@
     border-top-right-radius: 5px;
     border: 1px solid $mainBorderColor; 
 
+    counter-reset: line;
+
     &-Header{
         padding: 10px 15px;
         margin-bottom: 4px;
+        min-height: 20px;
 
         position: relative;
 
@@ -36,7 +39,7 @@
         border-collapse: separate;
     }
 
-    &-Line{
+    &-LineText{
         padding: 0;
         white-space: pre-wrap;
         word-wrap: break-word;
@@ -52,6 +55,12 @@
 
         vertical-align: top;
         text-align: right;
+
+        counter-increment: line;
+
+        &::before{
+            content: counter(line);
+        }
     }
 
     &-Line, &-LineNumber{
@@ -79,7 +88,7 @@
         }
     }
 
-    &-IconType{
+    &-FileIcon{
         margin-right: 6px;
 
         vertical-align: middle;

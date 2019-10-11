@@ -22,23 +22,20 @@
 	}
 
 	&_view_primary > &-Item {
-		padding-top: 6px;
+		padding-top: 3px;
 		margin-left: 26px;
 	}
 
 	&-Item {
 		margin-left: 32px;
 		height: 100%;
-		padding-top: 3px;
 
 		text-decoration: none;
 
+		position: relative;
 		display: flex;
 		align-items: center;
 		box-sizing: border-box;
-		transition: border 300ms;
-
-		border-bottom: 3px solid transparent;
 
 		&:first-child {
 			margin-left: 0;
@@ -48,10 +45,21 @@
             margin-left: auto;
 		}
 
-		&_selected,
-		&:hover {
-			border-bottom: 3px solid #ff4f49;
+		&_selected .Navigation-Underline,
+		&:hover .Navigation-Underline{
+			background: #ff4f49;
 		}
+	}
+
+	&-Underline{
+		bottom: 0px;
+		height: 3px;
+		width: 100%;
+
+		transition: background 300ms;
+
+		display: block;
+		position: absolute;
 	}
 
 	&-Link_uppercase {

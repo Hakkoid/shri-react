@@ -15,9 +15,7 @@ const files = (state = [], action) => {
             ]
 
         case RESET_FILES: 
-            return [  
-                ...action.files
-            ]
+            return []
 
         default:
             return state

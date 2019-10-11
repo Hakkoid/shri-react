@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux'
 
 import Layout from './../../blocks/Layout'
 import Branch from './../../blocks/Branch'
 import Hr from './../../blocks/Hr'
 import Navigation from './../../blocks/Navigation'
-import FileList from './../../blocks/FileList'
+import Code from './../../blocks/Code'
 import Path from './../../blocks/Path'
-
+import { fetchFileBlob } from '../../actions/file'
 
 const Nav = () => {
     return (
@@ -25,12 +26,23 @@ const Nav = () => {
     )
 }
 
-export default ({ match }) => {
+const File = ({ match, onInit, blob }) => {
     const {
+        repositoryId,
         commitHash,
-        path,
-        repositoryId
+        path
     } = match.params
+
+    useEffect(() => {
+        onInit(repositoryId, commitHash, path)
+    }, [
+        onInit,
+        repositoryId,
+        commitHash,
+        path
+    ])
+
+    const fileName = match.params.path.replace(/.*\//, '')
 
     return (
         <Layout>
@@ -39,8 +51,22 @@ export default ({ match }) => {
                 <Hr />
                 <Branch></Branch>
                 <Nav />
-                <FileList params={match.params} />
+                <Code fileName={fileName} blob={blob} />
             </Layout.Section>
         </Layout>
     )
 }
+
+const mapStateToProps = ({ file }) => { return { blob: file.data } }
+const mapDispatchToProps = dispatch => {
+    return {
+        onInit: (repositoryId, commitHash, path) => {
+            dispatch(fetchFileBlob(repositoryId, commitHash, path))
+        }
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(File)

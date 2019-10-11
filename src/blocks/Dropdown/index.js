@@ -11,7 +11,7 @@ export default ({ selected, children = [], title, mods }) => {
         if (selected === index) {
             header = item
         } else {
-            accumulator.push(item)
+            accumulator.push(<div key={index} className={bemCls('Item')}>{item}</div>)
         }
 
         return accumulator

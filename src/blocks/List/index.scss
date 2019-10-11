@@ -1,52 +1,56 @@
-@import './../../constants';
+@import "./../../constants";
 
-.List{
-    margin: 0;
-    padding: 0;
+.List {
+	margin: 0;
+	padding: 0;
 
-    list-style-type: none;
+	list-style-type: none;
 
-    &-Item{
-        padding: 14px 8px 14px;
+	&-Item {
+		padding: 14px 8px 14px;
 
-        position: relative;
+		position: relative;
 
-        border-bottom: 1px solid $secondaryBorderColor;
+		border-bottom: 1px solid $secondaryBorderColor;
 
-        &_view_header{
-            padding: 14px 8px 10px;
-            border-bottom: 1px solid $mainBorderColor;
-        }
+		&_view_header {
+			padding: 14px 8px 10px;
+			border-bottom: 1px solid $mainBorderColor;
+		}
 
-        &:last-child{
-            border-bottom: none;
-        }
-    }
+		&:last-child {
+			border-bottom: none;
+		}
+	}
 
-    &-Arrow{
-        height: 21px;
-        width: 10px;
-        top: 50%;
-        right: 3px;
-        transform: translateY(-50%) translateY(1px);
+	&-Arrow {
+		height: 21px;
+		width: 10px;
+		top: 50%;
+		right: 3px;
+		transform: translateY(-50%) translateY(1px);
 
-        position: absolute;
+		position: absolute;
 
-        fill: $mainBorderColor;
+		fill: $mainBorderColor;
 
-        & > svg{
-            height: 100%;
-            width: 100%;
-        }
-    }
+		& > svg {
+			height: 100%;
+			width: 100%;
+		}
+	}
 
-    @media screen and (min-width: $screen-m){
-        &-Item{    
+	@media screen and (min-width: $screen-m) {
+		&-Arrow {
+			display: none;
+		}
+	}
 
-        }
+	@media screen and (max-width: $screen-m) {
+		overflow-x: scroll;
 
-        &-Arrow{
-            display: none;
-        }
-    }
+		&-Item {
+			min-width: 1024px;
+		}
+	}
 }

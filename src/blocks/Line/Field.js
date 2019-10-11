@@ -1,11 +1,17 @@
 import React from 'react'
 
 import './index.scss'
-import { bemCls } from './index'
+import Line, { bemCls } from './index'
 
-export default ({ children, mods, className = '' }) => {
+export default ({ children, mods, className }) => {
     let cls = bemCls('Field', mods)
-    cls += ` ${className}`
+    cls +=  className ? ` ${className}` : ''
 
-    return <li className={cls}>{children}</li>
+    return (
+        <li className={cls}>
+            <Line.Text>
+                {children}
+            </Line.Text>
+        </li>
+    )
 }
