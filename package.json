@@ -11,7 +11,10 @@
     "html-reporter": "^5.0.1"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "npm test --prefix ./server && node_modules/.bin/hermione",
+    "test-server": "npm test --prefix ./server",
+    "test-hermione": "node_modules/.bin/hermione",
+    "test-gui": "node_modules/.bin/hermione gui",
     "server": "node ./server/bin/www",
     "client": "npm start --prefix ./client",
     "install-all": "npm install && npm install --prefix ./client && npm install --prefix ./server",

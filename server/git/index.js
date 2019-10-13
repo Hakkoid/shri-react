@@ -1,8 +1,13 @@
 const fs = require('fs')
 const { spawn } = require('child_process')
 
-const wrap = text => `--{{{${text}}}}--`
-const separator = '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+const parsePretty = require('./helpers/parsePretty')
+const {
+    wrapField,
+    separator
+} = parsePretty
+
+const checkHash = require('./helpers/!checkHash')
 
 exports.getReps = function getReps(path, callback) {
     callback = callback || typeof path === 'function' && path || function () { }
@@ -22,23 +27,38 @@ exports.getReps = function getReps(path, callback) {
 }
 
 const defaultCommitFields = [
-    'hash: %H',
-    'date: %cd',
-    'message: %s',
-    'committer: %cn',
-    'committerEmail: %ce'
+    {
+        key: 'hash',
+        value: '%H'
+    },
+    {
+        key: 'date',
+        value: '%cd'
+    },
+    {
+        key: 'message',
+        value: '%s'
+    },
+    {
+        key: 'committer',
+        value: '%cn'
+    },
+    {
+        key: 'committerEmail',
+        value: '%ce'
+    }
 ]
 
 exports.getCommits = function getCommits(options, callback) {
     const hash = options.hash.trim()
 
-    if (checkHash(hash)) return handleErrHash(hash, callback)
+    if (!checkHash(hash)) return handleErrHash(hash, callback)
 
     const fields = options.fields || defaultCommitFields
 
     let format = ''
 
-    fields.forEach(field => format += wrap(field))
+    fields.forEach(({ key, value }) => format += wrapField(key, value))
     format += separator
 
     const args = ['log', `${hash}`, `--pretty=format:'${format}'`]
@@ -72,14 +92,14 @@ exports.getCommits = function getCommits(options, callback) {
             return
         }
 
-        callback(null, renderPretty(output))
+        callback(null, parsePretty(output))
     })
 }
 
 exports.getDiff = function getDiff(options, callback) {
     const hash = options.hash
 
-    if (checkHash(hash)) return handleErrHash(hash, callback)
+    if (!checkHash(hash)) return handleErrHash(hash, callback)
 
     const diffProcess = spawn('git', ['diff', `${hash}^1..${hash}`], { cwd: options.cwd })
 
@@ -109,7 +129,7 @@ exports.lsTree = function lsTree(options, callback) {
     const hash = options.hash || 'master'
     const path = options.path || ''
 
-    if (checkHash(hash)) return handleErrHash(hash, callback)
+    if (!checkHash(hash)) return handleErrHash(hash, callback)
 
     const lsProcess = spawn('git', ['ls-tree', `${hash}:${path}`], { cwd: options.cwd })
 
@@ -164,10 +184,22 @@ exports.lsTree = function lsTree(options, callback) {
 }
 
 const defaultFileFields = [
-    'commitHash: %H',
-    'updated: %cd',
-    'message: %s',
-    'committer: %cn',
+    {
+        key: 'commitHash',
+        value: '%H'
+    },
+    {
+        key: 'updated',
+        value: '%cd'
+    },
+    {
+        key: 'message',
+        value: '%s'
+    },
+    {
+        key: 'committer',
+        value: '%cn'
+    }
 ]
 
 function getDataOfFile(options, callback) {
@@ -178,7 +210,7 @@ function getDataOfFile(options, callback) {
 
     let format = ''
 
-    fields.forEach(field => format += wrap(field))
+    fields.forEach(({ key, value }) => format += wrapField(key, value))
     format += separator
 
     if (!path) {
@@ -188,7 +220,7 @@ function getDataOfFile(options, callback) {
         return
     }
 
-    if (checkHash(hash)) return handleErrHash(hash, callback)
+    if (!checkHash(hash)) return handleErrHash(hash, callback)
 
     const showProcess = spawn('git', ['log', '-n', '1', `--format='${format}'`, hash, '--', `./${path}`], { cwd: options.cwd })
 
@@ -205,7 +237,7 @@ function getDataOfFile(options, callback) {
 
     showProcess.stdout.on('end', () => {
         if (!output) return
-        callback(null, renderPretty(output))
+        callback(null, parsePretty(output))
     })
 }
 
@@ -221,7 +253,7 @@ exports.show = function show(options, callback) {
         return
     }
 
-    if (checkHash(hash)) return handleErrHash(hash, callback)
+    if (!checkHash(hash)) return handleErrHash(hash, callback)
 
     const showProcess = spawn('git', ['show', `${hash}:${path}`], { cwd: options.cwd })
 
@@ -308,10 +340,6 @@ exports.deleteRepository = function deleteRepository(options, callback) {
     })
 }
 
-function checkHash(hash) {
-    return !!hash.match(/[~. \-=(){}]/)
-}
-
 function handleErrHash(hash, callback) {
     const err = `Unexpected hash option ${hash}`
     console.error(err)
@@ -322,24 +350,5 @@ function setSpanwErrorHandler(process, callback) {
     process.on('error', err => {
         console.error(`git spawn error: ${err}`)
         callback(err)
-    })
-}
-
-function renderPretty(output) {
-    let data = output.split(separator)
-    data.pop()
-
-
-    return data.map(item => {
-        const variables = item.match(/\-{2}\{{3}.*?\}{3}\-{2}/g)
-        const result = {}
-        variables.forEach(variable => {
-            variable = variable.slice(5, variable.length - 5)
-            const key = variable.match(/[^:]*:/)[0].replace(':', '')
-            const value = variable.replace(/[^:]*:/, '').trim()
-
-            result[key] = value
-        })
-        return result
     })
 }
