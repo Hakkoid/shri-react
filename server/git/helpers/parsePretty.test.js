@@ -7,7 +7,7 @@ const {
     separator
 } = parsePretty
 
-describe('модуль parsePretty.', () => {
+describe('parsePretty', () => {
     describe('wrapField возращает ожидаемые значения.', () => {
         it('Должна обарачивать key и value в --{{{key: value}}}--', () => {
             const result = wrapField('coordinateX', '10')
