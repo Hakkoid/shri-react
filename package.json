@@ -1,0 +1,31 @@
+{
+  "name": "shri-react",
+  "version": "1.0.0",
+  "description": "Для запуска сервера нужно перейти в папку с ним ```cd server```, установить зависимости ```npm install``` и  запустить ```npm start -- --path=pathToReps```, где ```pathToReps``` это путь до директории с репозиториями, сервер запускается на ```localhost:3010```.<br> Для запуска клиента  схоже - ```cd client```, ```npm install```, ```npm start```, адрес - ```localhost:3000``` <br> [список репозиториев](http://localhost:3000)",
+  "main": "hermione.conf.js",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "hermione": "^2.13.0"
+  },
+  "devDependencies": {
+    "html-reporter": "^5.0.1"
+  },
+  "scripts": {
+    "test": "mocha",
+    "server": "node ./server/bin/www",
+    "client": "npm start --prefix ./client",
+    "install-all": "npm install && npm install --prefix ./client && npm install --prefix ./server",
+    "dev-server": "node ./server/bin/www --path=./reps",
+    "clone-reps": "git clone https://github.com/facebook/bistro.git ./reps/bistro && git clone https://github.com/facebook/react.git ./reps/react"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hakkoid/shri-react.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Hakkoid/shri-react/issues"
+  },
+  "homepage": "https://github.com/Hakkoid/shri-react#readme"
+}
