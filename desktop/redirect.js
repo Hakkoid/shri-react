@@ -115,7 +115,7 @@ describe('Переход по хлебным крошкам.', function () {
         await clickDirectory(this.browser)
 
         return clickPreviousBreadcrumbs(this.browser)
-            .waitForExist(fileList)
+            .waitForExist(fileList, 2000)
             .getHTML(fileList)
             .then(function (newUrl) {
                 assert.equal(oldUrl, newUrl)
