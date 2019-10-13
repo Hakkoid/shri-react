@@ -9,7 +9,7 @@
 		padding: 5px 0 10px;
 	}
 
-	&-Dir {
+	&-Item {
 		display: inline-block;
 		margin-top: 4px;
 		margin-right: 10px;
@@ -30,8 +30,7 @@
 	@media screen and (min-width: $screen-m) {
 		padding: 5px 0 13px;
 
-		&-Dir,
-		&-File {
+		&-Item {
 			margin-top: 0;
 		}
 	}

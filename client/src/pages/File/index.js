@@ -45,15 +45,13 @@ const File = ({ match, onInit, blob }) => {
     const fileName = match.params.path.replace(/.*\//, '')
 
     return (
-        <Layout>
-            <Layout.Section>
-                <Path {...{ hash: commitHash, path, repositoryId }} />
-                <Hr />
-                <Branch></Branch>
-                <Nav />
-                <Code fileName={fileName} blob={blob} />
-            </Layout.Section>
-        </Layout>
+        <Layout.Section>
+            <Path {...{ hash: commitHash, path, repositoryId }} />
+            <Hr />
+            <Branch />
+            <Nav />
+            <Code fileName={fileName} blob={blob} />
+        </Layout.Section>
     )
 }
 

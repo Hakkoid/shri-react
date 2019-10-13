@@ -6,10 +6,16 @@ import './index.scss'
 import LogoArcanum from './../LogoArcanum'
 import Navigation from './../Navigation'
 import Dropdown from './../Dropdown'
-import './../Text/index.scss'
 
-export default ({ repositories }) => {
-    return <header className='Header'>
+import { cn } from '@bem-react/classname'
+export const bemCls = cn('Header')
+
+const Header = ({ repositories, className }) => {
+    let cls = bemCls()
+    cls += className ? ` ${className}` : ''
+
+
+    return <header className={cls}>
         <Navigation mods={{view: 'primary'}}>
             <Navigation.Item>
                 <LogoArcanum />
@@ -30,3 +36,5 @@ export default ({ repositories }) => {
         </Navigation>
     </header>
 }
+
+export default Header

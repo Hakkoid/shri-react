@@ -9,6 +9,9 @@ import StyledLink from './../StyledLink'
 import { bemCls as bemText } from './../Text'
 import { fetchFiles } from './../../actions/files'
 
+import { cn } from '@bem-react/classname'
+const bemCls = cn('FileList')
+
 const FileList = ({ files = [], params, onInit }) => {
     const {
         repositoryId,
@@ -29,7 +32,7 @@ const FileList = ({ files = [], params, onInit }) => {
 
 
     return (
-        <List>
+        <List className={bemCls()}>
             <List.Item mods={{ view: 'header' }}>
                 <Line className={bemText({ color: 'secondary' })}>
                     <Line.Field mods={{ grow: 'medium' }}>Name</Line.Field>
@@ -66,7 +69,7 @@ function makeLines({ files, repos, currentHash, path }) {
         return (
             <List.Item key={fileName}>
                 <Line>
-                    <Line.Field mods={{ grow: 'medium', withIcon: true }}>
+                    <Line.Field className={bemCls('Name')} mods={{ grow: 'medium', withIcon: true }}>
                         <StyledLink
                             color='main'
                             className={bemText({ weight: 'bold' })}
@@ -76,7 +79,7 @@ function makeLines({ files, repos, currentHash, path }) {
                             {fileName}
                         </StyledLink>
                     </Line.Field>
-                    <Line.Field mods={{ grow: 'medium' }}>
+                    <Line.Field className={bemCls('Hash')} mods={{ grow: 'medium' }}>
                         <StyledLink to={`/repos/${repos}/tree/${commitHash}`}>
                             {commitHash.slice(0, 6)}
                         </StyledLink>

@@ -11,24 +11,25 @@ export default ({
     mods = {},
     repositoryId,
     path = '',
-    hash = 'master'
+    hash = 'master',
+    isDirectory
 }) => {
     let items = []
 
-    if(path) items = path.replace(/(^\/)|(\/$)/g, '').split('/')
-    
+    if (path) items = path.replace(/(^\/)|(\/$)/g, '').split('/')
+
     items.unshift(hash)
 
     let pathTo = ``
 
     items = items.map((item, index) => {
-        const className = bemCls('Dir')
+        const className = bemCls('Item')
         let color = 'secondary'
         let mainPath = `repos/${repositoryId}/tree`
         pathTo += `/${item}`
 
         if (index === items.length - 1) {
-            mainPath = `repos/${repositoryId}/blob`
+            if (!isDirectory) mainPath = `repos/${repositoryId}/blob`
             color = 'main'
         }
 

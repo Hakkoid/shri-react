@@ -6,7 +6,12 @@ import Item from './Item'
 import { cn } from '@bem-react/classname'
 export const bemCls = cn('List')
 
-const List = ({ children }) => <ul className="List">{children}</ul>
+const List = ({ children, className }) => {
+    let cls = bemCls()
+    cls += className ? ` ${className}` : ''
+
+    return <ul className={cls}>{children}</ul>
+}
 
 List.Item = Item
 

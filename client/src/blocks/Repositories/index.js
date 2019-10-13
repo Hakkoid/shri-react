@@ -5,12 +5,15 @@ import List from './../List'
 import StyledLink from './../StyledLink'
 import { fetchRepositories } from './../../actions/repositories'
 
+import { cn } from '@bem-react/classname'
+export const bemCls = cn('Repositories')
+
 
 const Repositories = ({ repositories = [], onInit }) => {
     useEffect(onInit, [])
 
     return (
-        <List>
+        <List className={bemCls()}>
             {
                 repositories.map(repository => {
                     return (

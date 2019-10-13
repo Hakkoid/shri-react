@@ -33,14 +33,12 @@ export default ({ match }) => {
     } = match.params
 
     return (
-        <Layout>
-            <Layout.Section>
-                <Path {...{ hash: commitHash, path, repositoryId }} />
-                <Hr />
-                <Branch></Branch>
-                <Nav />
-                <FileList params={match.params} />
-            </Layout.Section>
-        </Layout>
+        <Layout.Section>
+            <Path {...{ hash: commitHash, path, repositoryId, isDirectory: true }} />
+            <Hr />
+            <Branch></Branch>
+            <Nav />
+            <FileList params={match.params} />
+        </Layout.Section>
     )
 }

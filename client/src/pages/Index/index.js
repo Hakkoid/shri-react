@@ -8,12 +8,10 @@ import { bemCls as bemText } from './../../blocks/Text'
 
 export default () => {
     return (
-        <Layout>
-            <Layout.Section>
-                <h1 className={bemText({ type: 'h1', size: 'xl' })}>Repositories</h1>
-                <Hr />
-                <Repositories />
-            </Layout.Section>
-        </Layout>
+        <Layout.Section>
+            <h1 className={bemText({ type: 'h1', size: 'xl' })}>Repositories</h1>
+            <Hr />
+            <Repositories />
+        </Layout.Section>
     )
 }
