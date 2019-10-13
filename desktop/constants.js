@@ -8,7 +8,10 @@ module.exports.selectors = {
     fileName: '.FileList-Name',
     directory: '.FileList-Name a[href*="/tree/"]',
     file: '.FileList-Name a[href*="/blob/"]',
-    code: '.Code-Line',
+    code: '.Code',
+    codeLine: '.Code-Line',
     breadcrumbs: '.Path',
-    breadcrumbsItem: '.Path-Item'
+    breadcrumbsItem: '.Path-Item',
+    header: '.Header',
+    footer: '.Footer'
 }

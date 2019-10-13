@@ -7,7 +7,7 @@ const {
     separator
 } = parsePretty
 
-const checkHash = require('./helpers/!checkHash')
+const checkHash = require('./helpers/checkHash')
 
 exports.getReps = function getReps(path, callback) {
     callback = callback || typeof path === 'function' && path || function () { }

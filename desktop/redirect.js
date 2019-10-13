@@ -9,7 +9,7 @@ const {
     directory,
     fileList,
     fileName,
-    code
+    codeLine
 } = selectors
 
 const {
@@ -19,7 +19,7 @@ const {
     clickPreviousBreadcrumbs
 } = require('./helpers')
 
-describe('Переход на репозитории работает', function () {
+describe('Переход на репозитории работает.', function () {
     it('При клике на репозиторий должен меняться url', async function () {
         await this.browser.url(urls.repsList)
 
@@ -50,7 +50,7 @@ describe('Переход на репозитории работает', function
 })
 
 
-describe('Переход между папками работает', function () {
+describe('Переход между папками.', function () {
     it('При клике на папку должен меняться url', async function () {
 
         await openRepository(this.browser)
@@ -82,7 +82,7 @@ describe('Переход между папками работает', function (
 
 });
 
-describe('Переход на файлы работает', function () {
+describe('Переход на файлы.', function () {
     it('При клике на файл должен меняться url', async function () {
         await openRepository(this.browser)
 
@@ -99,12 +99,12 @@ describe('Переход на файлы работает', function () {
         await openRepository(this.browser)
 
         return clickFile(this.browser)
-            .waitForExist(code)
+            .waitForExist(codeLine)
     });
 
 });
 
-describe('Переход по хлебным крошкам работает', function () {
+describe('Переход по хлебным крошкам.', function () {
     it('При переходе на директорию и возвращении обратно через хлебные крошки содержание папки должно быть одинаковым', async function () {
         await openRepository(this.browser)
 
