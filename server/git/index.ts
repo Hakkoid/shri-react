@@ -1,15 +1,27 @@
-const fs = require('fs')
-const { spawn } = require('child_process')
+import fs from 'fs'
+import { spawn, ChildProcess } from 'child_process'
 
-const parsePretty = require('./helpers/parsePretty')
+import parsePretty, { PrettyObj } from './helpers/parsePretty'
+
+import checkHash from './helpers/checkHash'
+
 const {
     wrapField,
     separator
 } = parsePretty
 
-const checkHash = require('./helpers/checkHash')
 
-exports.getReps = function getReps(path, callback) {
+interface GetReps {
+    (
+        path: string,
+        callback: (
+            err: Error | null,
+            repositories?: string[]
+        ) => void
+    ): void
+}
+
+export const getReps: GetReps = function (path, callback) {
     callback = callback || typeof path === 'function' && path || function () { }
     path = typeof path === 'string' && path || '/'
 
@@ -20,8 +32,8 @@ exports.getReps = function getReps(path, callback) {
             return
         }
 
-        let result = files.filter(file => file.isDirectory() && file.name[0] !== '.')
-        result = result.map(file => file.name)
+        const filteredFiles = files.filter(file => file.isDirectory() && file.name[0] !== '.')
+        const result = filteredFiles.map(file => file.name)
         callback(err, result)
     })
 }
@@ -49,7 +61,26 @@ const defaultCommitFields = [
     }
 ]
 
-exports.getCommits = function getCommits(options, callback) {
+interface GetCommits {
+    (
+        options: {
+            hash: string,
+            fields?: Array<{
+                key: string,
+                value: string
+            }>,
+            skip?: string,
+            number?: string,
+            cwd: string
+        },
+        callback: (
+            err: Error | null,
+            result?: Array<PrettyObj | null>
+        ) => void
+    ): void
+}
+
+export const getCommits: GetCommits = function getCommits(options, callback) {
     const hash = options.hash.trim()
 
     if (!checkHash(hash)) return handleErrHash(hash, callback)
@@ -61,14 +92,14 @@ exports.getCommits = function getCommits(options, callback) {
     fields.forEach(({ key, value }) => format += wrapField(key, value))
     format += separator
 
-    const args = ['log', `${hash}`, `--pretty=format:'${format}'`]
+    const args: Array<string> = ['log', `${hash}`, `--pretty=format:'${format}'`]
 
-    if (typeof options.skip === 'number') {
+    if (typeof options.skip === 'string') {
         args.push('--skip')
         args.push(options.skip)
     }
 
-    if (typeof options.number === 'number') {
+    if (typeof options.number === 'string') {
         args.push('-n')
         args.push(options.number)
     }
@@ -88,7 +119,7 @@ exports.getCommits = function getCommits(options, callback) {
 
     logProcess.stdout.on('end', () => {
         if (!output) {
-            callback('git log error: commits with these parameters don\'t exist')
+            callback(new Error('git log error: commits with these parameters don\'t exist'))
             return
         }
 
@@ -96,7 +127,20 @@ exports.getCommits = function getCommits(options, callback) {
     })
 }
 
-exports.getDiff = function getDiff(options, callback) {
+interface GetDiff {
+    (
+        options: {
+            hash: string,
+            cwd: string
+        },
+        callback: (
+            err: Error | null,
+            result?: string
+        ) => void
+    ): void
+}
+
+export const getDiff: GetDiff = function (options, callback) {
     const hash = options.hash
 
     if (!checkHash(hash)) return handleErrHash(hash, callback)
@@ -117,15 +161,35 @@ exports.getDiff = function getDiff(options, callback) {
     diffProcess.stdout.on('end', () => {
         if (!output) return
 
-        const result = {
-            diff: output
-        }
-
-        callback(null, result)
+        callback(null, output)
     })
 }
 
-exports.lsTree = function lsTree(options, callback) {
+interface LsTree {
+    (
+        options: {
+            hash?: string,
+            path?: string,
+            cwd: string
+        },
+        callback: (
+            err: Error | null,
+            result?: File[]
+        ) => void
+    ): void
+}
+
+
+export interface File {
+    fileName: string,
+    type: string,
+    commitHash?: string,
+    message?: string,
+    committer?: string,
+    updated?: string
+}
+
+export const lsTree: LsTree = function (options, callback) {
     const hash = options.hash || 'master'
     const path = options.path || ''
 
@@ -148,7 +212,7 @@ exports.lsTree = function lsTree(options, callback) {
         if (!output) return
 
         let lines = output.replace(/\n$/, '').split(/\n/)
-        let files = lines.map(line => {
+        let files: File[] = lines.map(line => {
             const values = line.replace(/\t/, ' ').split(' ')
 
             return {
@@ -158,17 +222,17 @@ exports.lsTree = function lsTree(options, callback) {
         })
 
         let counter = 0
-        files = files.map((file, index) => {
+        files.forEach((file, index) => {
             let pathToDir = path ? `${path}/` : ''
 
             getDataOfFile({
                 path: `${pathToDir}${file.fileName}`,
                 hash,
                 cwd: options.cwd
-            }, (err, data = {}) => {
+            }, (err, data) => {
                 counter++
 
-                if (!err) {
+                if (!err && data) {
                     files[index] = {
                         ...file,
                         ...data[0]
@@ -202,7 +266,25 @@ const defaultFileFields = [
     }
 ]
 
-function getDataOfFile(options, callback) {
+interface GetDataOfFile {
+    (
+        options: {
+            hash: string,
+            fields?: Array<{
+                key: string,
+                value: string
+            }>,
+            path: string,
+            cwd: string
+        },
+        callback: (
+            err: Error | null,
+            result?: Array<PrettyObj | null>
+        ) => void
+    ): void
+}
+
+export const getDataOfFile: GetDataOfFile = function (options, callback) {
     const hash = options.hash
     const path = options.path
 
@@ -212,13 +294,6 @@ function getDataOfFile(options, callback) {
 
     fields.forEach(({ key, value }) => format += wrapField(key, value))
     format += separator
-
-    if (!path) {
-        const err = `path option is required`
-        console.error(err)
-        callback(err)
-        return
-    }
 
     if (!checkHash(hash)) return handleErrHash(hash, callback)
 
@@ -241,17 +316,23 @@ function getDataOfFile(options, callback) {
     })
 }
 
+interface Show {
+    (
+        options: {
+            hash: string,
+            path: string,
+            cwd: string
+        },
+        callback: (
+            err: Error | null,
+            result?: string
+        ) => void
+    ): void
+}
 
-exports.show = function show(options, callback) {
+export const show: Show = function (options, callback) {
     const hash = options.hash
     const path = options.path
-
-    if (!path) {
-        const err = `path option is required`
-        console.error(err)
-        callback(err)
-        return
-    }
 
     if (!checkHash(hash)) return handleErrHash(hash, callback)
 
@@ -271,22 +352,26 @@ exports.show = function show(options, callback) {
     showProcess.stdout.on('end', () => {
         if (!output) return
 
-        const result = {
-            data: output
-        }
-        callback(null, result)
+        callback(null, output)
     })
 }
 
-exports.clone = function (options, callback) {
+interface Clone {
+    (
+        options: {
+            path: string,
+            cwd: string
+        },
+        callback: (
+            err: Error | null,
+            result?: string
+        ) => void
+    ): void
+}
+
+export const clone: Clone = function (options, callback) {
     const path = options.path
 
-    if (!path) {
-        const err = `path option is required`
-        console.error(err)
-        callback(err)
-        return
-    }
     const cloneProcess = spawn('git', [
         'clone', `${path}`
     ], {
@@ -304,22 +389,26 @@ exports.clone = function (options, callback) {
     cloneProcess.stdout.on('end', () => {
         if (!output) return
 
-        const result = {
-            message: 'repository is loaded success'
-        }
-        callback(null, result)
+        callback(null, 'repository is loaded success')
     })
 }
 
-exports.deleteRepository = function deleteRepository(options, callback) {
+interface DeleteRepository {
+    (
+        options: {
+            cwd: string,
+            repositoryId: string
+        },
+        callback: (
+            err: Error | null,
+            result?: string
+        ) => void
+    ): void
+}
+
+export const deleteRepository: DeleteRepository = function (options, callback) {
     const repositoryId = options.repositoryId
 
-    if (!repositoryId) {
-        const err = `repositoryId option is required`
-        console.error(err)
-        callback(err)
-        return
-    }
     const deleteProcess = spawn('rm', ['-rf', repositoryId], { cwd: options.cwd })
 
     let output = ''
@@ -333,20 +422,31 @@ exports.deleteRepository = function deleteRepository(options, callback) {
     deleteProcess.stdout.on('end', () => {
         if (!output) return
 
-        const result = {
-            message: 'repository is deleted success'
-        }
-        callback(null, result)
+        callback(null, 'repository is deleted success')
     })
 }
 
-function handleErrHash(hash, callback) {
-    const err = `Unexpected hash option ${hash}`
+interface HandleErrHash {
+    (
+        hash: string,
+        callback: (err: Error) => void
+    ): void
+}
+
+const handleErrHash: HandleErrHash = function (hash, callback) {
+    const err = new Error(`Unexpected hash option ${hash}`)
     console.error(err)
     callback(err)
 }
 
-function setSpanwErrorHandler(process, callback) {
+interface SetSpanwErrorHandler {
+    (
+        process: ChildProcess,
+        callback: (err: Error) => void
+    ): void
+}
+
+const setSpanwErrorHandler: SetSpanwErrorHandler = function (process, callback) {
     process.on('error', err => {
         console.error(`git spawn error: ${err}`)
         callback(err)

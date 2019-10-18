@@ -15,10 +15,10 @@
     "test-server": "npm test --prefix ./server",
     "test-hermione": "node_modules/.bin/hermione",
     "test-gui": "node_modules/.bin/hermione gui",
-    "server": "node ./server/bin/www",
+    "server": "npm start --prefix ./server",
+    "dev-server": "npm start --prefix ./server -- --path='./../reps'",
     "client": "npm start --prefix ./client",
     "install-all": "npm install && npm install --prefix ./client && npm install --prefix ./server",
-    "dev-server": "node ./server/bin/www --path=./reps",
     "clone-reps": "git clone https://github.com/facebook/bistro.git ./reps/bistro && git clone https://github.com/facebook/react.git ./reps/react"
   },
   "repository": {

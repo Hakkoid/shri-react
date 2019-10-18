@@ -1,12 +1,14 @@
-var express = require('express')
-var path = require('path')
-var cookieParser = require('cookie-parser')
-var logger = require('morgan')
+import express from 'express'
+import path from 'path'
+import cookieParser from 'cookie-parser'
+import logger from 'morgan'
 
-const minimist = require('minimist')
+import routerApi from './routes/api'
+
+import minimist from 'minimist'
 const argv = minimist(process.argv.slice(2))
 
-var app = express()
+const app = express()
 
 app.use(logger('dev'))
 app.use(express.json())
@@ -15,8 +17,7 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
 if(argv.path){
-    var routerApi = require('./routes/api')
     app.use('/api/repos', routerApi)
 }
 
-module.exports = app;
+export default app

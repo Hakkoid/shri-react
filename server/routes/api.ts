@@ -1,4 +1,4 @@
-const { 
+import { 
         getReps,
         getCommits,
         getDiff,
@@ -6,16 +6,16 @@ const {
         show,
         clone,
         deleteRepository
-    } = require('../git')
+    } from '../git'
 
-const path = require('path')
+import path from 'path'
+import express from 'express'
+import minimist from 'minimist'
 
-const express = require('express')
 const router = express.Router()
 
-const minimist = require('minimist')
 const argv = minimist(process.argv.slice(2))
-const pathToReps = argv.path
+const pathToReps: string = argv.path
 
 router.get('/', function(req, res, next) {
     getReps(pathToReps, (err, files) => {
@@ -42,10 +42,10 @@ router.get('/:repositoryId/commit/:commitHash', function(req, res, next) {
     const options = {
         cwd: path.resolve(pathToReps, req.params.repositoryId),
         hash: req.params.commitHash,
-        number: 1,
+        number: '1',
     }
     getCommits(options, (err, commits) => {
-        if(err) return next()
+        if(err || !commits) return next()
 
         res.json(commits[0])
     })
@@ -57,12 +57,14 @@ router.get('/:repositoryId/commits/:commitHash/page/(:pageNumber)(/size/:pageSiz
 
     let pageSize = Number(req.params.pageSize);
     pageSize = (typeof pageSize === 'number' || pageSize > 0) && Math.floor(pageSize) || 30
+    
+    const skip = Math.floor(pageNumber) * pageSize
 
     const options = {
         cwd: path.resolve(pathToReps, req.params.repositoryId),
         hash: req.params.commitHash,
-        number: pageSize,
-        skip: Math.floor(pageNumber) * pageSize
+        number: pageSize.toString(),
+        skip: skip.toString()
     }
     getCommits(options, (err, commits) => {
         if(err) return next()
@@ -102,10 +104,12 @@ router.get('/:repositoryId/blob/:commitHash/*', function(req, res, next){
         hash: req.params.commitHash,
         path: req.params['0'] && req.params['0'].replace(/^\//, '') || ''
     }
-    show(options, (err, file) => {
+    show(options, (err, blob) => {
         if(err) return next()
 
-        res.json(file)
+        res.json({
+            data: blob
+        })
     })
 })
 
@@ -123,7 +127,9 @@ router.post('/', function(req, res){
             return
         }
 
-        res.json(data)
+        res.json({
+            message: data
+        })
     })
 })
 
@@ -132,7 +138,7 @@ router.delete('/:repositoryId', (req, res) => {
         cwd: pathToReps,
         repositoryId: req.params.repositoryId.replace(/^\//, '')
     }
-    deleteRepository(options, (err, file) => {
+    deleteRepository(options, (err, data) => {
         if(err) {
             res.status(404)
             res.json({
@@ -141,7 +147,9 @@ router.delete('/:repositoryId', (req, res) => {
             return
         }
 
-        res.json(file)
+        res.json({
+            message: data
+        })
     })
 })
 
@@ -153,4 +161,4 @@ router.get(/.*/, (req, res) => {
 })
 
 
-module.exports = router
+export default router
