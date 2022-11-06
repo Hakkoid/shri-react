@@ -5,7 +5,7 @@
   "main": "hermione.conf.js",
   "dependencies": {
     "chai": "^4.2.0",
-    "hermione": "^2.13.0"
+    "hermione": "^5.3.1"
   },
   "devDependencies": {
     "html-reporter": "^5.0.1"
